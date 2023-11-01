@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Nyholm\BundleTest\TestKernel;
+use SoureCode\Bundle\Job\SoureCodeJobBundle;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Filesystem\Path;
+
+require_once dirname(__DIR__) . '/../../vendor/autoload.php';
+
+$kernel = new TestKernel('dev', true);
+$kernel->addTestBundle(DoctrineBundle::class);
+$kernel->addTestBundle(SoureCodeJobBundle::class);
+$kernel->addTestConfig(Path::join(__DIR__, '..', 'config', 'config.yaml'));
+$kernel->setTestProjectDir(Path::join(__DIR__, '..'));
+
+$app = new Application($kernel);
+$app->run();

@@ -1,0 +1,5 @@
+vendor/
+tests/var/
+.phpunit.result.cache
+composer.lock
+tests/app/var/data.db
