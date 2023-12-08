@@ -29,10 +29,8 @@ class CancelTest extends AbstractBaseFunctionalTestCase
         $entityManager->persist($entity);
         $entityManager->flush();
 
-        $job = $jobManager->create($entity, new WaitJob(10));
-
         $now = new \DateTime();
-        $jobManager->dispatch($job);
+        $job = $jobManager->dispatch($entity, new WaitJob(10));
         $after = new \DateTime();
         $diff = $after->getTimestamp() - $now->getTimestamp();
 

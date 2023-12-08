@@ -64,13 +64,15 @@ class JobManager
         return '"' . str_replace(['"', '^', '%', '!', "\n"], ['""', '"^^"', '"^%"', '"^!"', '!LF!'], $argument) . '"';
     }
 
-    public function dispatch(Job $job): void
+    public function dispatch(string|object $entityOrIdentity, object $payload): Job
     {
-        $pendingJobs = $this->jobRepository->getPendingByJob($job);
+        $pendingJobs = $this->jobRepository->getPending($entityOrIdentity, $payload);
 
         if (count($pendingJobs) > 0) {
             throw new LogicException("Job with identity already queued.");
         }
+
+        $job = $this->create($entityOrIdentity, $payload);
 
         $command = [
             ...$this->getPhpBinary(),
@@ -95,6 +97,8 @@ class JobManager
 
         // $process->disableOutput();
         $process->start();
+
+        return $job;
     }
 
     protected function getPhpBinary(): ?array

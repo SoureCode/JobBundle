@@ -30,12 +30,9 @@ class FunctionalTest extends AbstractBaseFunctionalTestCase
         $entityManager->persist($entity);
         $entityManager->flush();
 
-        $job = $jobManager->create($entity, new WaitJob());
-
-        self::assertTrue($job->isPending());
-
         $now = new \DateTime();
-        $jobManager->dispatch($job);
+        $job = $jobManager->dispatch($entity, new WaitJob());
+        self::assertTrue($job->isPending());
         $after = new \DateTime();
         $diff = $after->getTimestamp() - $now->getTimestamp();
 
@@ -100,10 +97,8 @@ class FunctionalTest extends AbstractBaseFunctionalTestCase
         $entityManager->persist($entity);
         $entityManager->flush();
 
-        $job = $jobManager->create($entity, new FastJob("yeet"));
-
         $now = new \DateTime();
-        $jobManager->dispatch($job);
+        $job = $jobManager->dispatch($entity, new FastJob("yeet"));
         $after = new \DateTime();
         $diff = $after->getTimestamp() - $now->getTimestamp();
 
